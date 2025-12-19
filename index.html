@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NENAVIJU | music archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p-grad: linear-gradient(45deg, #8A2BE2, #FF0000, #0000FF);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 150px;
+            overflow-x: hidden;
+        }
+
+        /* АНИМИРОВАННЫЙ ФОН */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(125deg, #000000, #1a0033, #000d1a, #220000);
+            background-size: 400% 400%;
+            animation: animateBG 15s ease infinite;
+        }
+
+        @keyframes animateBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header { padding: 40px 20px 10px; text-align: center; }
+        header h1 {
+            font-size: clamp(35px, 10vw, 70px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            background: linear-gradient(to bottom, #fff 40%, #555 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ТЕЛЕГРАМ */
+        .tg-wrap { display: flex; justify-content: center; margin-bottom: 25px; }
+        .tg-btn {
+            background: rgba(0, 136, 204, 0.15);
+            border: 1px solid rgba(0, 136, 204, 0.4);
+            color: #fff; text-decoration: none;
+            padding: 12px 24px; border-radius: 12px;
+            font-weight: 700; font-size: 11px;
+            text-transform: uppercase; display: flex;
+            align-items: center; gap: 10px; transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .tg-btn:hover { background: rgba(0, 136, 204, 0.3); transform: translateY(-2px); }
+
+        /* ПОИСК */
+        .search-container { max-width: 600px; margin: 0 auto 15px; padding: 0 20px; }
+        .search-input {
+            width: 100%; background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px 20px; border-radius: 15px; color: #fff;
+            font-family: inherit; font-size: 16px; outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ИНФО-ПАНЕЛЬ (СТРОГО В ОДНУ СТРОКУ) */
+        .info-panel {
+            max-width: 600px; margin: 0 auto 25px; padding: 0 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 10px;
+        }
+        .info-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px; border-radius: 10px;
+            font-size: 11px; font-weight: 600; color: #aaa;
+            border: 1px solid rgba(255,255,255,0.05);
+            white-space: nowrap; /* Запрет переноса */
+            display: flex; align-items: center;
+        }
+        .info-badge b { color: #8A2BE2; font-weight: 900; margin-right: 4px; }
+        .click-hint { color: #555; font-size: 10px; text-transform: uppercase; }
+
+        /* СПИСОК ТРЕКОВ */
+        .list { max-width: 800px; margin: 0 auto; padding: 0 15px; }
+        .item {
+            display: flex; align-items: center; padding: 12px 15px; margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05); border-radius: 18px; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.2s;
+        }
+        .item:hover { background: rgba(255, 255, 255, 0.1); }
+        .item.active { background: rgba(138, 43, 226, 0.2); border-color: #8A2BE2; }
+        .item-img { width: 50px; height: 50px; border-radius: 10px; margin: 0 15px; object-fit: cover; }
+        .item-meta { flex: 1; min-width: 0; }
+        .item-title { display: block; font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-artist { font-size: 11px; color: #888; text-transform: uppercase; }
+
+        /* ПЛЕЕР */
+        .player-fixed {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 95%; max-width: 550px;
+            background: var(--p-grad); padding: 2px; border-radius: 30px;
+            z-index: 1000; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+        .p-inner {
+            background: rgba(10, 10, 10, 0.98); border-radius: 28px;
+            padding: 12px 18px; display: flex; align-items: center; gap: 15px;
+            position: relative;
+        }
+        .p-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+        .p-info img { width: 45px; height: 45px; border-radius: 8px; flex-shrink: 0; }
+        .p-text { min-width: 0; flex: 1; }
+        .p-text h4 { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-text p { font-size: 10px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .p-controls { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
+        .p-btn { cursor: pointer; color: #fff; font-size: 16px; transition: 0.2s; }
+        .p-btn:hover { color: #8A2BE2; }
+        .p-play {
+            width: 44px; height: 44px; background: #fff; color: #000;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .p-progress-bar {
+            position: absolute; bottom: 8px; left: 75px; right: 20px;
+            height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px;
+        }
+        .p-fill { height: 100%; width: 0%; background: var(--p-grad); border-radius: 2px; }
+
+        /* АДАПТИВНОСТЬ ПОД МАЛЕНЬКИЕ ЭКРАНЫ */
+        @media (max-width: 400px) {
+            .click-hint { display: none; }
+            .p-controls { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-layer"></div>
+
+    <header>
+        <h1>NENAVIJU</h1>
+        <p style="letter-spacing: 5px; color: #8A2BE2; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 20px;">music archive</p>
+    </header>
+
+    <div class="tg-wrap">
+        <a href="https://t.me/NenavijyMusik" class="tg-btn" target="_blank">
+            <i class="fab fa-telegram-plane"></i> СКАЧАТЬ ВЕСЬ АРХИВ
+        </a>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Поиск в архиве...">
+    </div>
+
+    <div class="info-panel">
+        <div class="info-badge">
+            <i class="fas fa-music"></i>&nbsp;Наша музыка<span class="click-hint">&nbsp;| кликни на трек</span>
+        </div>
+        <div class="info-badge">
+            <b id="trackCount">39</b> ТРЕКОВ
+        </div>
+    </div>
+
+    <div class="list" id="tracklist"></div>
+
+    <div class="player-fixed">
+        <div class="p-inner">
+            <div class="p-info">
+                <img id="p-img" src="cover_1.jpg">
+                <div class="p-text">
+                    <h4 id="p-title">Выбери трек</h4>
+                    <p id="p-artist">Nenaviju</p>
+                </div>
+            </div>
+            
+            <div class="p-controls">
+                <i class="fas fa-step-backward p-btn" id="prev"></i>
+                <div class="p-btn p-play" id="playBtn"><i class="fas fa-play"></i></div>
+                <i class="fas fa-step-forward p-btn" id="next"></i>
+            </div>
+
+            <div class="p-progress-bar">
+                <div class="p-fill" id="fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="mainAudio"></audio>
+
+    <script>
+        const songs = [
+            { id: 1, title: "Последний мост", artist: "Nenaviju & Suno", file: "audio_1.mp3", img: "cover_1.jpg" },
+            { id: 2, title: "Последний мост (female remix)", artist: "Nenaviju & Suno", file: "audio_2.mp3", img: "cover_2.jpg" },
+            { id: 3, title: "Железо", artist: "Nenaviju & Suno", file: "audio_3.mp3", img: "cover_3.jpg" },
+            { id: 4, title: "Битый код", artist: "Nenaviju & Suno", file: "audio_4.mp3", img: "cover_4.jpg" },
+            { id: 5, title: "Без звания", artist: "Nenaviju & Suno", file: "audio_5.mp3", img: "cover_5.jpg" },
+            { id: 6, title: "Золотой дворец", artist: "Nenaviju & Suno", file: "audio_6.mp3", img: "cover_6.jpg" },
+            { id: 7, title: "Привычка", artist: "Nenaviju & Suno", file: "audio_7.mp3", img: "cover_7.jpg" },
+            { id: 8, title: "Папа", artist: "Nenaviju & Suno", file: "audio_8.mp3", img: "cover_8.jpg" },
+            { id: 9, title: "Папа в танке", artist: "Nenaviju & Suno", file: "audio_9.mp3", img: "cover_9.jpg" },
+            { id: 10, title: "Сестра не по крови", artist: "Nenaviju & Suno", file: "audio_10.mp3", img: "cover_10.jpg" },
+            { id: 11, title: "Лик Святости", artist: "Nenaviju & Suno", file: "audio_11.mp3", img: "cover_11.jpg" },
+            { id: 12, title: "Головные боли", artist: "Nenaviju & Suno", file: "audio_12.mp3", img: "cover_12.jpg" },
+            { id: 13, title: "Скелет", artist: "Nenaviju & Suno", file: "audio_13.mp3", img: "cover_13.jpg" },
+            { id: 14, title: "Пустая тишина", artist: "Nenaviju & Suno", file: "audio_14.mp3", img: "cover_14.jpg" },
+            { id: 15, title: "Точка срыва", artist: "Nenaviju & Suno", file: "audio_15.mp3", img: "cover_15.jpg" },
+            { id: 16, title: "Колокол Бездны", artist: "Nenaviju & Diffusion", file: "audio_16.mp3", img: "cover_16.jpg" },
+            { id: 17, title: "Ревную значит твой", artist: "Nenaviju & Suno", file: "audio_17.mp3", img: "cover_17.jpg" },
+            { id: 18, title: "Вторая Я", artist: "Nenaviju & Suno", file: "audio_18.mp3", img: "cover_18.jpg" },
+            { id: 19, title: "Новая Жертва", artist: "Nenaviju & Suno", file: "audio_19.mp3", img: "cover_19.jpg" },
+            { id: 20, title: "Урожай", artist: "Nenaviju & Suno", file: "audio_20.mp3", img: "cover_20.jpg" },
+            { id: 21, title: "Метро Макс", artist: "Nenaviju & Suno", file: "audio_21.mp3", img: "cover_21.jpg" },
+            { id: 22, title: "Грех матери", artist: "Nenaviju & Suno", file: "audio_22.mp3", img: "cover_22.jpg" },
+            { id: 23, title: "Хрусталь и пепел", artist: "Nenaviju & Suno", file: "audio_23.mp3", img: "cover_23.jpg" },
+            { id: 24, title: "Фарфоровая месть", artist: "Nenaviju & Suno", file: "audio_24.mp3", img: "cover_24.jpg" },
+            { id: 25, title: "Характер Котана", artist: "Nenaviju & Suno", file: "audio_25.mp3", img: "cover_25.jpg" },
+            { id: 26, title: "Последний бой", artist: "Nenaviju & Suno", file: "audio_26.mp3", img: "cover_26.jpg" },
+            { id: 27, title: "Дорога домой", artist: "Nenaviju & Suno", file: "audio_27.mp3", img: "cover_27.jpg" },
+            { id: 28, title: "Приказ короля", artist: "Nenaviju & Suno", file: "audio_28.mp3", img: "cover_28.jpg" },
+            { id: 29, title: "Жуткая темница", artist: "Nenaviju & Suno", file: "audio_29.mp3", img: "cover_29.jpg" },
+            { id: 30, title: "Арена Славы", artist: "Nenaviju & Suno", file: "audio_30.mp3", img: "cover_30.jpg" },
+            { id: 31, title: "Вознесение", artist: "Nenaviju & Suno", file: "audio_31.mp3", img: "cover_31.jpg" },
+            { id: 32, title: "Эскадры грозы морей", artist: "@musgoat, Nenaviju & Suno", file: "audio_32.mp3", img: "cover_32.jpg" },
+            { id: 33, title: "Безмолвное королевство", artist: "Nenaviju & Suno", file: "audio_33.mp3", img: "cover_33.jpg" },
+            { id: 34, title: "Алина", artist: "Nenaviju & Suno", file: "audio_34.mp3", img: "cover_34.jpg" },
+            { id: 35, title: "ОдИн и ТоТ жЕ пИзДеЦ", artist: "Nenaviju & Suno", file: "audio_35.mp3", img: "cover_35.jpg" },
+            { id: 36, title: "Картуз", artist: "Nenaviju & Suno", file: "audio_36.mp3", img: "cover_36.jpg" },
+            { id: 37, title: "Лёха Генерал", artist: "Nenaviju & Suno", file: "audio_37.mp3", img: "cover_37.jpg" },
+            { id: 38, title: "Побег", artist: "Nenaviju & Suno", file: "audio_38.mp3", img: "cover_38.jpg" },
+            { id: 39, title: "Эхо отображается от потолка", artist: "Nenaviju & Suno", file: "audio_39.mp3", img: "cover_39.jpg" }
+        ];
+
+        let currentIdx = 0;
+        let filteredSongs = [...songs];
+        const audio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const tracklist = document.getElementById('tracklist');
+        const searchInput = document.getElementById('searchInput');
+        const trackCountEl = document.getElementById('trackCount');
+
+        function renderList() {
+            tracklist.innerHTML = '';
+            trackCountEl.innerText = filteredSongs.length;
+            filteredSongs.forEach((s) => {
+                const globalIdx = songs.findIndex(t => t.id === s.id);
+                const item = document.createElement('div');
+                item.className = `item ${currentIdx === globalIdx ? 'active' : ''}`;
+                item.onclick = () => loadTrack(globalIdx, true);
+                item.innerHTML = `
+                    <div class="item-num">${s.id}</div>
+                    <img src="${s.img}" class="item-img" onerror="this.src='https://via.placeholder.com/50/222/fff?text=N'">
+                    <div class="item-meta">
+                        <span class="item-title">${s.title}</span>
+                        <span class="item-artist">${s.artist}</span>
+                    </div>
+                `;
+                tracklist.appendChild(item);
+            });
+        }
+
+        function loadTrack(idx, auto) {
+            currentIdx = idx;
+            const s = songs[currentIdx];
+            audio.src = s.file;
+            document.getElementById('p-title').innerText = s.title;
+            document.getElementById('p-artist').innerText = s.artist;
+            document.getElementById('p-img').src = s.img;
+            renderList();
+            if(auto) { audio.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+        }
+
+        playBtn.onclick = () => {
+            if(audio.paused) { audio.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+            else { audio.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+        };
+
+        document.getElementById('next').onclick = () => loadTrack((currentIdx + 1) % songs.length, true);
+        document.getElementById('prev').onclick = () => loadTrack((currentIdx - 1 + songs.length) % songs.length, true);
+
+        audio.ontimeupdate = () => {
+            const p = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('fill').style.width = p + '%';
+        };
+
+        searchInput.oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            filteredSongs = songs.filter(s => s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val));
+            renderList();
+        };
+
+        loadTrack(0, false);
+    </script>
+</body>
+</html>
