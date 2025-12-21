@@ -1,525 +1,644 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>NENAVIJU | Music Archive — Слушать музыку онлайн</title>
-
-<meta name="description" content="Официальный сайт Ненавижу. Слушайте любимые треки, скачивайте и подписывайтесь на наш ТГ-канал.">
-
-<meta name="keywords" content="NENAVIJU, музыка, архив, слушать онлайн, песни, музыкальный архив">
-
-<meta name="yandex-verification" content="e7397d0c6854e944" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NENAVIJU | music archive</title>
-    <meta name="description" content="Официальный музыкальный архив NENAVIJU. Слушай эксклюзивные треки, создавай плейлисты и скачивай музыку в один клик.">
-    <meta name="keywords" content="Nenaviju, музыка, плеер, слушать онлайн, скачать музыку, архив песен">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nenaviju.github.io/nenaviju/">
-    <meta property="og:title" content="NENAVIJU | Музыкальный архив">
-    <meta property="og:description" content="Стильный плеер, любимые треки и личное избранное. Заходи и слушай!">
-    <meta property="og:image" content="https://nenaviju.github.io/nenaviju/preview.jpg">
+    <title>Неnaviju - Музыкальный плеер</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --p-grad: linear-gradient(45deg, #8A2BE2, #FF0000, #0000FF);
-            --panel-bg: #111111; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding-bottom: 230px; 
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        /* --- AUTH SYSTEM --- */
-        .auth-container { position: absolute; top: 20px; right: 20px; z-index: 2000; }
-        .google-btn {
-            background: #fff; color: #000; padding: 8px 16px; border-radius: 50px;
-            font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px;
-            cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(255,255,255,0.2);
-        }
-        .user-profile { display: none; align-items: center; cursor: pointer; position: relative; }
-        .user-avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid #8A2BE2; object-fit: cover; }
-        .user-menu {
-            display: none; position: absolute; top: 55px; right: 0;
-            background: #1a1a1a; border: 1px solid #333; padding: 8px;
-            border-radius: 12px; min-width: 130px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-        }
-        .user-menu.active { display: block; animation: fadeIn 0.2s ease; }
-        .logout-btn {
-            color: #ff4444; background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2);
-            width: 100%; text-align: center; padding: 10px; border-radius: 8px;
-            font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s;
+        .player-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            overflow: hidden;
         }
 
-        /* --- BACKGROUND & HEADER --- */
-        .bg-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: linear-gradient(125deg, #3a0070, #000000, #8b0000, #00008b, #000000, #4b0082);
-            background-size: 300% 300%; animation: animateBG 12s ease-in-out infinite;
-        }
-        @keyframes animateBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        header { padding: 40px 20px 10px; text-align: center; }
-        header h1 {
-            font-size: clamp(30px, 8vw, 60px); font-weight: 900; text-transform: uppercase;
-            background: linear-gradient(to bottom, #fff 40%, #8A2BE2 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .player-header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .tg-wrap { display: flex; justify-content: center; margin-bottom: 35px; }
-        .tg-btn {
-            background: linear-gradient(145deg, #0088cc, #006699);
-            color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 12px;
-            font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex;
-            align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 0 #004466, 0 8px 15px rgba(0,0,0,0.4); transition: 0.1s;
+        .player-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
         }
-        .tg-btn:active { transform: translateY(4px); box-shadow: 0 0px 0 #004466; }
 
-        .search-area { max-width: 600px; margin: 0 auto 15px; padding: 0 20px; display: flex; gap: 10px; }
-        .search-input {
-            flex: 1; background: var(--panel-bg); border: 2px solid #222;
-            padding: 12px 18px; border-radius: 12px; color: #fff; font-family: inherit; outline: none;
+        .player-header p {
+            color: #888;
+            font-size: 14px;
         }
-        .fav-filter-btn {
-            width: 50px; border-radius: 12px; border: 2px solid #222; background: var(--panel-bg);
-            color: #444; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px;
+
+        .album-art {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
         }
-        .fav-filter-btn.active { color: #ff0000; border-color: #ff0000; }
 
-        .info-panel { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; }
-        .info-badge { background: var(--panel-bg); padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: 600; border: 1px solid #222; display: flex; align-items: center; }
-        .info-badge b { color: #FF0000; font-weight: 900; font-size: 15px; margin-left: 5px; }
-
-        /* --- TRACKLIST --- */
-        .list { max-width: 800px; margin: 0 auto; padding: 0 15px; }
-        .item { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 8px; background: #111111; border-radius: 15px; cursor: pointer; border: 1px solid #222; transition: 0.2s; }
-        .item.active { border-color: #8A2BE2; background: #1a0a2e !important; }
-        .item-num { font-size: 12px; color: #555; width: 25px; font-weight: 700; }
-        .item-img { width: 45px; height: 45px; border-radius: 8px; margin: 0 12px; object-fit: cover; }
-        .item-meta { flex: 1; min-width: 0; }
-        .item-title { display: block; font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-artist { font-size: 10px; color: #666; }
-        .action-btn { color: #444; font-size: 18px; padding: 8px; cursor: pointer; transition: 0.2s; }
-        .action-btn.fav-btn.active { color: #ff0000; animation: heartBeat 0.4s ease; }
-        @keyframes heartBeat { 0% { transform: scale(1); } 25% { transform: scale(1.4); } 100% { transform: scale(1); } }
-
-        /* --- PLAYER --- */
-        .player-fixed {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 95%; max-width: 800px; background: var(--p-grad); padding: 1.5px; border-radius: 24px; z-index: 1000;
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
+
+        .album-art i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .song-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .song-info h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-info p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        #progressContainer {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progressContainer #fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #667eea;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .controls button:hover {
+            color: #764ba2;
+            transform: scale(1.2);
+        }
+
+        .controls button.play-btn {
+            font-size: 40px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls button.play-btn:hover {
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .volume-section {
+            margin-bottom: 30px;
+        }
+
+        .volume-section label {
+            display: block;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        #volSlider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        #volSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #volSlider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .playlist-section {
+            margin-bottom: 20px;
+        }
+
+        .playlist-section h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .playlist {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .playlist-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-item:hover {
+            background: #f5f5f5;
+        }
+
+        .playlist-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .playlist-item i {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .playlist-item.active i {
+            opacity: 1;
+            animation: bounce 0.6s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
         .p-inner {
-            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 22.5px; padding: 15px 25px; display: flex; ali-items: center; gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        .p-info { display: flex; align-items: center; gap: 18px; width: 280px; flex-shrink: 0; }
-        .p-info img { width: 100px; height: 100px; border-radius: 14px; object-fit: cover; border: 1px solid #333; }
-        .p-mid { flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .p-progress-bar { width: 100%; height: 15px; display: flex; align-items: center; cursor: pointer; }
-        .p-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; flex: 1; }
-        .p-fill { height: 100%; width: 0%; background: var(--p-grad); }
-        .p-controls { display: flex; align-items: center; gap: 15px; margin-top: 5px; }
-        .p-play { width: 48px; height: 48px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .p-btn { cursor: pointer; opacity: 0.6; transition: 0.2s; font-size: 18px; color: #fff; }
-        .p-btn.active { opacity: 1; color: #ff0000; }
-        .p-volume { display: flex; align-items: center; gap: 10px; width: 140px; justify-content: flex-end; }
-        .v-slider { width: 80px; cursor: pointer; accent-color: #8A2BE2; }
 
-        /* --- TOASTS --- */
-        #toast-container { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
-        .toast { 
-            background: rgba(20,20,20,0.95); color: #fff; padding: 12px 24px; border-radius: 50px; 
-            font-size: 13px; font-weight: 600; margin-bottom: 8px; border: 1px solid #333; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: toastIn 0.3s ease forwards;
+        .p-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
-        @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
 
-        @media (max-width: 700px) {
-            .p-inner { flex-wrap: wrap; padding: 10px 15px; gap: 10px; }
-            .p-info { width: 100%; }
-            .p-info img { width: 80px; height: 80px; }
-            .p-volume { width: 100%; justify-content: center; display: flex; } /* Ползунок на мобилках */
-            .v-slider { width: 60%; }
+        .p-header h3 {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .p-header button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+
+        .p-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .p-item:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .p-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .p-item i {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .p-item.active i {
+            opacity: 1;
+        }
+
+        .playlist::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .playlist::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .playlist::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .playlist::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 600px) {
+            .player-container {
+                padding: 20px;
+            }
+
+            .player-header h1 {
+                font-size: 24px;
+            }
+
+            .album-art {
+                width: 150px;
+                height: 150px;
+                font-size: 60px;
+            }
+
+            .controls button.play-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 30px;
+            }
+
+            .controls button {
+                font-size: 18px;
+            }
+
+            .playlist {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="player-container">
+        <div class="player-header">
+            <h1>🎵 Неnaviju</h1>
+            <p>Музыкальный плеер</p>
+        </div>
 
-    <div class="bg-layer"></div>
-    <div id="toast-container"></div>
+        <div class="album-art">
+            <img id="albumImg" src="" alt="Album Art" style="display: none;">
+            <i id="albumIcon" class="fas fa-music"></i>
+        </div>
 
-    <div class="auth-container">
-        <button id="loginBtn" class="google-btn"><i class="fab fa-google"></i> Войти</button>
-        <div id="userProfile" class="user-profile">
-            <img id="userAvatar" class="user-avatar" src="">
-            <div id="userMenu" class="user-menu"><button class="logout-btn" id="logoutBtn">ВЫЙТИ</button></div>
+        <div class="song-info">
+            <h2 id="songTitle">Выберите трек</h2>
+            <p id="songArtist">Нет исполнителя</p>
+        </div>
+
+        <div class="progress-section">
+            <div id="progressContainer">
+                <div id="fill"></div>
+            </div>
+            <div class="time-display">
+                <span id="currTime">0:00</span>
+                <span id="durTime">0:00</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" title="Предыдущий"><i class="fas fa-step-backward"></i></button>
+            <button id="playBtn" class="play-btn" title="Воспроизведение"><i class="fas fa-play"></i></button>
+            <button id="nextBtn" title="Следующий"><i class="fas fa-step-forward"></i></button>
+        </div>
+
+        <div class="volume-section">
+            <label for="volSlider"><i class="fas fa-volume-up"></i> Громкость</label>
+            <input type="range" id="volSlider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
+        <div class="playlist-section">
+            <div class="p-header">
+                <h3>Плейлист</h3>
+                <button id="togglePlaylist" title="Свернуть"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="playlist" id="playlist"></div>
         </div>
     </div>
 
-    <header>
-        <h1>NENAVIJU</h1>
-        <p style="letter-spacing: 5px; color: #ff0000; font-size: 10px; font-weight: 700; text-transform: uppercase;">music archive</p>
-    </header>
-
-    <div class="tg-wrap">
-        <a href="https://t.me/NenavijyMusik" class="tg-btn" target="_blank"><i class="fab fa-telegram-plane"></i> ПЕРЕХОД В ТГ</a>
-    </div>
-
-    <div class="search-area">
-    <input type="text" id="searchInput" class="search-input" placeholder="Поиск в архиве...">
-    <button id="topSortBtn" class="fav-filter-btn" title="Популярные"><i class="fas fa-crown"></i></button>
-    <button id="favFilterBtn" class="fav-filter-btn"><i class="fas fa-heart"></i></button>
-</div>
-
-    <div class="info-panel">
-        <div class="info-badge"><i class="fas fa-music"></i>&nbsp; Наша музыка</div>
-        <div class="info-badge"><b id="trackCount">39</b> ТРЕКОВ</div>
-    </div>
-
-    <div class="list" id="tracklist"></div>
-
-    <div class="player-fixed">
-        <div class="p-inner">
-            <div class="p-info">
-                <img id="p-img" src="">
-                <div class="p-text"><h4 id="p-title">Выбери трек</h4><p id="p-artist">Nenaviju</p></div>
-            </div>
-            <div class="p-mid">
-                <div class="p-progress-bar" id="progressContainer"><div class="p-bg"><div class="p-fill" id="fill"></div></div></div>
-                <div style="font-size: 10px; margin-top: 5px; color: #888;"><span id="currTime">0:00</span> / <span id="durTime">0:00</span></div>
-                <div class="p-controls">
-                    <i class="fas fa-redo-alt p-btn" id="loopBtn"></i>
-                    <i class="fas fa-random p-btn" id="shuffleBtn"></i>
-                    <i class="fas fa-step-backward p-btn" id="prev"></i>
-                    <div class="p-play" id="playBtn"><i class="fas fa-play"></i></div>
-                    <i class="fas fa-step-forward p-btn" id="next"></i>
-                </div>
-            </div>
-            <div class="p-volume">
-                <i class="fas fa-volume-up p-btn" id="muteBtn"></i>
-                <input type="range" id="volSlider" class="v-slider" min="0" max="1" step="0.01" value="0.8">
-            </div>
-        </div>
-    </div>
-
-    <audio id="mainAudio"></audio>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = { 
-            apiKey : "AIzaSyCRSoYjZPzrCqbB9Wk1goOZfMp8jcjitlY", 
-            authDomain : "nenaviju-music.firebaseapp.com", 
-            projectId : "nenaviju-music", 
-            storageBucket : "nenaviju-music.firebasestorage.app", 
-            messagingSenderId : "660973574580", 
-            appId : "1:660973574580:web:4c73d64d3d60ae9c693ae1" 
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        // Функция для накрутки счетчика прослушиваний
-window.logPlay = async (trackId) => {
-    try {
-        const trackRef = doc(db, "stats", trackId.toString());
-        await setDoc(trackRef, { plays: increment(1) }, { merge: true });
-    } catch (e) {
-        console.error("Ошибка счетчика:", e);
-    }
-};
-window.getAllStats = async () => {
-    try {
-        const { getDocs, collection } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const querySnapshot = await getDocs(collection(db, "stats"));
-        const stats = {};
-        querySnapshot.forEach((doc) => {
-            stats[doc.id] = doc.data().plays || 0;
-        });
-        return stats;
-    } catch (e) {
-        console.error("Ошибка получения статистики:", e);
-        return {};
-    }
-};
-
-        const provider = new GoogleAuthProvider();
-
-        const loginBtn = document.getElementById('loginBtn'), logoutBtn = document.getElementById('logoutBtn');
-        const userProfile = document.getElementById('userProfile'), userMenu = document.getElementById('userMenu');
-
-        userProfile.onclick = (e) => { e.stopPropagation(); userMenu.classList.toggle('active'); };
-        window.onclick = () => userMenu.classList.remove('active');
-
-        loginBtn.onclick = async () => { 
-            try { 
-                await signInWithPopup(auth, provider); 
-                window.showToast("Вход в Google выполнен!", "fa-google");
-            } catch(e) { window.showToast("Ошибка авторизации", "fa-exclamation-triangle"); } 
-        };
-        logoutBtn.onclick = async () => { 
-            await signOut(auth); 
-            userMenu.classList.remove('active'); 
-            window.showToast("Вы вышли из профиля", "fa-sign-out-alt");
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                window.currentUser = user; loginBtn.style.display = 'none'; userProfile.style.display = 'flex';
-                document.getElementById('userAvatar').src = user.photoURL;
-                const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists()) { window.favorites = docSnap.data().favs || []; window.applyFilters(); }
-            } else {
-                window.currentUser = null; loginBtn.style.display = 'flex'; userProfile.style.display = 'none';
-                window.applyFilters();
-            }
-        });
-
-        window.syncFavs = async () => { if (window.currentUser) await setDoc(doc(db, "users", window.currentUser.uid), { favs: window.favorites }, { merge: true }); };
-    </script>
+    <audio id="audio"></audio>
 
     <script>
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songTitle = document.getElementById('songTitle');
+        const songArtist = document.getElementById('songArtist');
+        const playlist = document.getElementById('playlist');
+        const volSlider = document.getElementById('volSlider');
+        const fill = document.getElementById('fill');
+
         const songs = [
-            { id: 1, title: "Последний мост", artist: "Nenaviju & Suno", file: "audio_1.mp3", img: "cover_1.webp" },
-            { id: 2, title: "Последний мост (female remix)", artist: "Nenaviju & Suno", file: "audio_2.mp3", img: "cover_2.webp" },
-            { id: 3, title: "Железо", artist: "Nenaviju & Suno", file: "audio_3.mp3", img: "cover_3.webp" },
-            { id: 4, title: "Битый код", artist: "Nenaviju & Suno", file: "audio_4.mp3", img: "cover_4.webp" },
-            { id: 5, title: "Влад без звания", artist: "Nenaviju & Suno", file: "audio_5.mp3", img: "cover_5.webp" },
-            { id: 6, title: "Золотой дворец", artist: "Nenaviju & Suno", file: "audio_6.mp3", img: "cover_6.webp" },
-            { id: 7, title: "Привычка", artist: "Nenaviju & Suno", file: "audio_7.mp3", img: "cover_7.webp" },
-            { id: 8, title: "Папа", artist: "Nenaviju & Suno", file: "audio_8.mp3", img: "cover_8.webp" },
-            { id: 9, title: "Папа в танке", artist: "Nenaviju & Suno", file: "audio_9.mp3", img: "cover_9.webp" },
-            { id: 10, title: "Сестра не по крови", artist: "Nenaviju & Suno", file: "audio_10.mp3", img: "cover_10.webp" },
-            { id: 11, title: "Лик Святости", artist: "Nenaviju & Suno", file: "audio_11.mp3", img: "cover_11.webp" },
-            { id: 12, title: "Головные боли", artist: "Nenaviju & Suno", file: "audio_12.mp3", img: "cover_12.webp" },
-            { id: 13, title: "Скелет", artist: "Nenaviju & Suno", file: "audio_13.mp3", img: "cover_13.webp" },
-            { id: 14, title: "Пустая тишина", artist: "Nenaviju & Suno", file: "audio_14.mp3", img: "cover_14.webp" },
-            { id: 15, title: "Точка срыва", artist: "Nenaviju & Suno", file: "audio_15.mp3", img: "cover_15.webp" },
-            { id: 16, title: "Колокол Бездны", artist: "Nenaviju & Diffusion", file: "audio_16.mp3", img: "cover_16.webp" },
-            { id: 17, title: "Ревную значит твой", artist: "Nenaviju & Suno", file: "audio_17.mp3", img: "cover_17.webp" },
-            { id: 18, title: "Вторая Я", artist: "Nenaviju & Suno", file: "audio_18.mp3", img: "cover_18.webp" },
-            { id: 19, title: "Новая Жертва", artist: "Nenaviju & Suno", file: "audio_19.mp3", img: "cover_19.webp" },
-            { id: 20, title: "Урожай", artist: "Nenaviju & Suno", file: "audio_20.mp3", img: "cover_20.webp" },
-            { id: 21, title: "Метро Макс", artist: "Nenaviju & Suno", file: "audio_21.mp3", img: "cover_21.webp" },
-            { id: 22, title: "Грех матери", artist: "Nenaviju & Suno", file: "audio_22.mp3", img: "cover_22.webp" },
-            { id: 23, title: "Хрусталь и пепел", artist: "Nenaviju & Suno", file: "audio_23.mp3", img: "cover_23.webp" },
-            { id: 24, title: "Фарфоровая месть", artist: "Nenaviju & Suno", file: "audio_24.mp3", img: "cover_24.webp" },
-            { id: 25, title: "Характер Котана", artist: "Nenaviju & Suno", file: "audio_25.mp3", img: "cover_25.webp" },
-            { id: 26, title: "Последний бой", artist: "Nenaviju & Suno", file: "audio_26.mp3", img: "cover_26.webp" },
-            { id: 27, title: "Дорога домой", artist: "Nenaviju & Suno", file: "audio_27.mp3", img: "cover_27.webp" },
-            { id: 28, title: "Приказ короля", artist: "Nenaviju & Suno", file: "audio_28.mp3", img: "cover_28.webp" },
-            { id: 29, title: "Жуткая темница", artist: "Nenaviju & Suno", file: "audio_29.mp3", img: "cover_29.webp" },
-            { id: 30, title: "Арена Славы", artist: "Nenaviju & Suno", file: "audio_30.mp3", img: "cover_30.webp" },
-            { id: 31, title: "Вознесение", artist: "Nenaviju & Suno", file: "audio_31.mp3", img: "cover_31.webp" },
-            { id: 32, title: "Эскадры грозы морей", artist: "@musgoat", file: "audio_32.mp3", img: "cover_32.webp" },
-            { id: 33, title: "Безмолвное королевство", artist: "Nenaviju & Suno", file: "audio_33.mp3", img: "cover_33.webp" },
-            { id: 34, title: "Алина", artist: "Nenaviju & Suno", file: "audio_34.mp3", img: "cover_34.webp" },
-            { id: 35, title: "ОдИн и ТоТ жЕ пИзДеЦ", artist: "Nenaviju & Suno", file: "audio_35.mp3", img: "cover_35.webp" },
-            { id: 36, title: "Картуз", artist: "Nenaviju & Suno", file: "audio_36.mp3", img: "cover_36.webp" },
-            { id: 37, title: "Лёха Генерал", artist: "Nenaviju & Suno", file: "audio_37.mp3", img: "cover_37.webp" },
-            { id: 38, title: "Побег", artist: "Nenaviju & Suno", file: "audio_38.mp3", img: "cover_38.webp" },
-            { id: 39, title: "Эхо отображается от потолка", artist: "Nenaviju & Suno", file: "audio_39.mp3", img: "cover_39.webp" }
+            { title: 'Song 1', artist: 'Artist 1', src: 'https://example.com/song1.mp3' },
+            { title: 'Song 2', artist: 'Artist 2', src: 'https://example.com/song2.mp3' },
+            { title: 'Song 3', artist: 'Artist 3', src: 'https://example.com/song3.mp3' },
+            { title: 'Song 4', artist: 'Artist 4', src: 'https://example.com/song4.mp3' },
+            { title: 'Song 5', artist: 'Artist 5', src: 'https://example.com/song5.mp3' },
+            { title: 'Song 6', artist: 'Artist 6', src: 'https://example.com/song6.mp3' },
+            { title: 'Song 7', artist: 'Artist 7', src: 'https://example.com/song7.mp3' },
+            { title: 'Song 8', artist: 'Artist 8', src: 'https://example.com/song8.mp3' },
+            { title: 'Song 9', artist: 'Artist 9', src: 'https://example.com/song9.mp3' },
+            { title: 'Song 10', artist: 'Artist 10', src: 'https://example.com/song10.mp3' },
+            { title: 'Song 11', artist: 'Artist 11', src: 'https://example.com/song11.mp3' },
+            { title: 'Song 12', artist: 'Artist 12', src: 'https://example.com/song12.mp3' },
+            { title: 'Song 13', artist: 'Artist 13', src: 'https://example.com/song13.mp3' },
+            { title: 'Song 14', artist: 'Artist 14', src: 'https://example.com/song14.mp3' },
+            { title: 'Song 15', artist: 'Artist 15', src: 'https://example.com/song15.mp3' },
+            { title: 'Song 16', artist: 'Artist 16', src: 'https://example.com/song16.mp3' },
+            { title: 'Song 17', artist: 'Artist 17', src: 'https://example.com/song17.mp3' },
+            { title: 'Song 18', artist: 'Artist 18', src: 'https://example.com/song18.mp3' },
+            { title: 'Song 19', artist: 'Artist 19', src: 'https://example.com/song19.mp3' },
+            { title: 'Song 20', artist: 'Artist 20', src: 'https://example.com/song20.mp3' },
+            { title: 'Song 21', artist: 'Artist 21', src: 'https://example.com/song21.mp3' },
+            { title: 'Song 22', artist: 'Artist 22', src: 'https://example.com/song22.mp3' },
+            { title: 'Song 23', artist: 'Artist 23', src: 'https://example.com/song23.mp3' },
+            { title: 'Song 24', artist: 'Artist 24', src: 'https://example.com/song24.mp3' },
+            { title: 'Song 25', artist: 'Artist 25', src: 'https://example.com/song25.mp3' },
+            { title: 'Song 26', artist: 'Artist 26', src: 'https://example.com/song26.mp3' },
+            { title: 'Song 27', artist: 'Artist 27', src: 'https://example.com/song27.mp3' },
+            { title: 'Song 28', artist: 'Artist 28', src: 'https://example.com/song28.mp3' },
+            { title: 'Song 29', artist: 'Artist 29', src: 'https://example.com/song29.mp3' },
+            { title: 'Song 30', artist: 'Artist 30', src: 'https://example.com/song30.mp3' },
+            { title: 'Song 31', artist: 'Artist 31', src: 'https://example.com/song31.mp3' },
+            { title: 'Song 32', artist: 'Artist 32', src: 'https://example.com/song32.mp3' },
+            { title: 'Song 33', artist: 'Artist 33', src: 'https://example.com/song33.mp3' },
+            { title: 'Song 34', artist: 'Artist 34', src: 'https://example.com/song34.mp3' },
+            { title: 'Song 35', artist: 'Artist 35', src: 'https://example.com/song35.mp3' },
+            { title: 'Song 36', artist: 'Artist 36', src: 'https://example.com/song36.mp3' },
+            { title: 'Song 37', artist: 'Artist 37', src: 'https://example.com/song37.mp3' },
+            { title: 'Song 38', artist: 'Artist 38', src: 'https://example.com/song38.mp3' },
+            { title: 'Song 39', artist: 'Artist 39', src: 'https://example.com/song39.mp3' }
         ];
-        
-        window.favorites = JSON.parse(localStorage.getItem('nenaviju_favs')) || [];
-        let currentIdx = 0, isShuffle = false, isLoop = false, showOnlyFavs = false;
-        let isTopSorted = false;
-        let filteredSongs = [...songs];
 
-        const audio = document.getElementById('mainAudio'), playBtn = document.getElementById('playBtn');
-        const fill = document.getElementById('fill'), volSlider = document.getElementById('volSlider');
+        let currentIndex = 0;
+        let isPlaying = false;
 
-        window.showToast = function(text, icon = "fa-info-circle") {
-            const container = document.getElementById('toast-container');
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function showToast(message, icon = 'fa-info-circle') {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = `<i class="fas ${icon}"></i> ${text}`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'toastOut 0.3s ease forwards';
-                setTimeout(() => toast.remove(), 300);
-            }, 2500);
-        };
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
 
-        function formatTime(s) { const m = Math.floor(s/60); const sc = Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
+        function loadSong(index) {
+            currentIndex = index;
+            const song = songs[index];
+            audio.src = song.src;
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            updatePlaylist();
+        }
 
-        window.applyFilters = async function() {
-            const val = document.getElementById('searchInput').value.toLowerCase();
-            const stats = await window.getAllStats(); // Получаем свежую статистику
-
-            // 1. Фильтруем (поиск + избранное)
-            filteredSongs = songs.filter(s => 
-                (s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val)) && 
-                (showOnlyFavs ? window.favorites.includes(s.id) : true)
-            );
-
-            // 2. Сортируем по популярности, если режим включен
-            if (isTopSorted) {
-                filteredSongs.sort((a, b) => {
-                    const playsA = stats[a.id] || 0;
-                    const playsB = stats[b.id] || 0;
-                    return playsB - playsA;
-                });
-            }
-
-            renderList();
-        };
-
-async function renderList() {
-            const list = document.getElementById('tracklist');
-            // Ждем получения цифр из базы
-            const stats = await window.getAllStats(); 
-            
-            list.innerHTML = '';
-            filteredSongs.forEach(s => {
-                const gIdx = songs.findIndex(t => t.id === s.id);
-                const plays = stats[s.id] || 0; 
-
-                const item = document.createElement('div');
-                item.className = `item ${currentIdx === gIdx ? 'active' : ''}`;
-                item.onclick = (e) => { if(!e.target.closest('.action-btn')) loadTrack(gIdx, true); };
-                
-                item.innerHTML = `
-                    <span class="item-num">${gIdx+1}</span>
-                    <img src="${s.img}" class="item-img">
-                    <div class="item-meta">
-                        <span class="item-title">${s.title}</span>
-                        <span class="item-artist">${s.artist}</span>
-                        <span style="font-size: 9px; color: #555; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
-                            <i class="fas fa-headphones" style="font-size: 8px;"></i> ${plays}
-                        </span>
-                    </div>
-                    <div class="item-actions">
-                        <i class="fas fa-heart action-btn fav-btn ${window.favorites.includes(s.id)?'active':''}" onclick="toggleFavorite(${s.id}, event)"></i>
-                        <a href="${s.file}" download="${s.title}.mp3" class="action-btn" onclick="showToast('Загрузка: ${s.title}', 'fa-download')">
-                            <i class="fas fa-download"></i>
-                        </a>
-                    </div>`;
-                list.appendChild(item);
+        function updatePlaylist() {
+            const items = document.querySelectorAll('.playlist-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === currentIndex);
             });
-            function scrollToActive() {
-            const activeItem = document.querySelector('.item.active');
-            if (activeItem) {
-                activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-            document.getElementById('trackCount').innerText = filteredSongs.length;
         }
 
-        function toggleFavorite(id, e) {
-            e.stopPropagation();
-            const song = songs.find(s => s.id === id);
-            if (window.favorites.includes(id)) {
-                window.favorites = window.favorites.filter(f => f !== id);
-                showToast(`Удалено из избранного`, "fa-heart-broken");
+        function renderPlaylist() {
+            playlist.innerHTML = '';
+            songs.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.className = `playlist-item ${index === currentIndex ? 'active' : ''}`;
+                item.innerHTML = `<i class="fas fa-music"></i> ${song.title} - ${song.artist}`;
+                item.onclick = () => {
+                    loadSong(index);
+                    audio.play();
+                    isPlaying = true;
+                    updatePlayBtn();
+                };
+                playlist.appendChild(item);
+            });
+        }
+
+        function updatePlayBtn() {
+            playBtn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+            playBtn.title = isPlaying ? 'Пауза' : 'Воспроизведение';
+        }
+
+        playBtn.onclick = () => {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
             } else {
-                window.favorites.push(id);
-                showToast(`Добавлено: ${song.title}`, "fa-heart");
+                audio.play();
+                isPlaying = true;
             }
-            localStorage.setItem('nenaviju_favs', JSON.stringify(window.favorites));
-            if(window.syncFavs) window.syncFavs();
-            window.applyFilters();
-        }
+            updatePlayBtn();
+        };
 
-        function loadTrack(idx, auto) {
-            currentIdx = idx; const s = songs[currentIdx]; audio.src = s.file;
-            document.getElementById('p-title').innerText = s.title;
-            document.getElementById('p-artist').innerText = s.artist;
-            document.getElementById('p-img').src = s.img;
-            renderList();
-            
-            setTimeout(scrollToActive, 100);
-            
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: s.title, artist: s.artist,
-                    artwork: [{ src: s.img, sizes: '512x512', type: 'image/jpeg' }]
-                });
+        nextBtn.onclick = () => {
+            loadSong((currentIndex + 1) % songs.length);
+            audio.play();
+            isPlaying = true;
+            updatePlayBtn();
+        };
+
+        prevBtn.onclick = () => {
+            loadSong((currentIndex - 1 + songs.length) % songs.length);
+            audio.play();
+            isPlaying = true;
+            updatePlayBtn();
+        };
+
+        volSlider.oninput = (e) => {
+            audio.volume = e.target.value;
+        };
+
+        document.onkeydown = (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                playBtn.click();
             }
-            if(auto) { audio.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            window.logPlay(songs[idx].id); }
-        }
-
-        function nextTrack() {
-            let nIdx;
-            if(isShuffle) {
-                nIdx = Math.floor(Math.random() * songs.length);
-            } else {
-                nIdx = (currentIdx + 1) % songs.length;
+            if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                nextBtn.click();
             }
-            loadTrack(nIdx, true);
-        }
-
-        // --- КЛАВИАТУРА ДЛЯ ПК ---
-        window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            if (e.code === 'Space') { e.preventDefault(); playBtn.click(); }
-            if (e.code === 'ArrowRight') audio.currentTime += 5;
-            if (e.code === 'ArrowLeft') audio.currentTime -= 5;
-            if (e.code === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + 0.1); volSlider.value = audio.volume; showToast(`Громкость: ${Math.round(audio.volume*100)}%`, "fa-volume-up"); }
-            if (e.code === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - 0.1); volSlider.value = audio.volume; showToast(`Громкость: ${Math.round(audio.volume*100)}%`, "fa-volume-down"); }
-        });
-
-        playBtn.onclick = () => { 
-            if(audio.paused) { audio.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; showToast("Воспроизведение", "fa-play"); } 
-            else { audio.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; showToast("Пауза", "fa-pause"); } 
-        };
-        
-        document.getElementById('next').onclick = nextTrack;
-        document.getElementById('prev').onclick = () => loadTrack((currentIdx - 1 + songs.length) % songs.length, true);
-        
-        document.getElementById('shuffleBtn').onclick = function() { 
-            isShuffle = !isShuffle; 
-            this.classList.toggle('active', isShuffle); 
-            showToast(isShuffle ? "Случайный порядок: ВКЛ" : "Случайный порядок: ВЫКЛ", "fa-random");
-        };
-        
-        document.getElementById('loopBtn').onclick = function() { 
-            isLoop = !isLoop; 
-            this.classList.toggle('active', isLoop); 
-            showToast(isLoop ? "Повтор трека: ВКЛ" : "Повтор трека: ВЫКЛ", "fa-redo-alt");
-        };
-
-        document.getElementById('favFilterBtn').onclick = function() { 
-            showOnlyFavs = !showOnlyFavs; 
-            this.classList.toggle('active', showOnlyFavs); 
-            showToast(showOnlyFavs ? "Фильтр: Только любимые" : "Фильтр: Все треки", "fa-heart");
-            window.applyFilters(); 
-        };
-
-        audio.onended = () => { if(isLoop) loadTrack(currentIdx, true); else nextTrack(); };
-        audio.ontimeupdate = () => { if(audio.duration) { fill.style.width = (audio.currentTime/audio.duration)*100+'%'; document.getElementById('currTime').innerText = formatTime(audio.currentTime); document.getElementById('durTime').innerText = formatTime(audio.duration); } };
-        volSlider.oninput = (e) => audio.volume = e.target.value;
-        document.getElementById('progressContainer').onclick = (e) => { const rect = e.currentTarget.getBoundingClientRect(); audio.currentTime = ((e.clientX - rect.left)/rect.width)*audio.duration; };
-        document.getElementById('searchInput').oninput = window.applyFilters;
-        document.getElementById('topSortBtn').onclick = function() { 
-            isTopSorted = !isTopSorted; 
-            this.classList.toggle('active', isTopSorted); 
-            
-            // Твои уведомления
-            if (isTopSorted) {
-                window.showToast("Сортировка: Сначала популярные", "fa-crown");
-            } else {
-                window.showToast("Сортировка: По порядку", "fa-list-ol");
+            if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                prevBtn.click();
             }
-            
-            window.applyFilters(); 
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                audio.volume = Math.min(1, audio.volume + 0.1);
+                volSlider.value = audio.volume;
+                showToast(`Громкость: ${Math.round(audio.volume*100)}%`, "fa-volume-up");
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                audio.volume = Math.max(0, audio.volume - 0.1);
+                volSlider.value = audio.volume;
+                showToast(`Громкость: ${Math.round(audio.volume*100)}%`, "fa-volume-down");
+            }
         };
 
-        loadTrack(0, false);
+        audio.onended = () => {
+            nextBtn.click();
+        };
+
+        audio.ontimeupdate = () => {
+            if(audio.duration) {
+                fill.style.width = (audio.currentTime/audio.duration)*100+'%';
+                document.getElementById('currTime').innerText = formatTime(audio.currentTime);
+                document.getElementById('durTime').innerText = formatTime(audio.duration);
+            }
+        };
+
+        document.getElementById('progressContainer').onclick = (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            audio.currentTime = ((e.clientX - rect.left)/rect.width)*audio.duration;
+        };
+
+        loadSong(0);
+        renderPlaylist();
     </script>
 </body>
 </html>
