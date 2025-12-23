@@ -1,0 +1,25 @@
+{
+  "name": "NENAVIJU Music Archive",
+  "short_name": "NENAVIJU",
+  "description": "Официальный музыкальный архив NENAVIJU. Слушай эксклюзивные треки и создавай свои плейлисты.",
+  "start_url": "/nenaviju/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "preview.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "preview.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ],
+  "categories": ["music", "entertainment"],
+  "lang": "ru-RU"
+}
