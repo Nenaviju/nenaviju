@@ -1,6 +1,6 @@
 // 🔥 NENAVIJU PWA SERVICE WORKER
 // Версия кэша (увеличивай при обновлении сайта)
-const CACHE_VERSION = 'nenaviju-v1.0.1';
+const CACHE_VERSION = 'nenaviju-v1.0.2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const AUDIO_CACHE = `${CACHE_VERSION}-audio`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
